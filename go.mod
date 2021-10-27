@@ -1,3 +1,3 @@
-module github.com/lowmem0ry/go-binance
+module github.com/joker8023/go-binance
 
 go 1.17
