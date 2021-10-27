@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/lowmem0ry/go-binance/v2/common"
+	"github.com/joker8023/go-binance/v2/common"
 )
 
 // DepthService show depth info

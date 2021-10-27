@@ -1,4 +1,4 @@
-module github.com/lowmem0ry/go-binance/v2
+module github.com/joker8023/go-binance/v2
 
 go 1.13
 
