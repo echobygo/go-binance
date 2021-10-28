@@ -3,6 +3,7 @@ package binance
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -81,10 +82,39 @@ func (s *GetMiningService) Do(ctx context.Context, opts ...RequestOption) (res *
 		endpoint: "/sapi/v1/mining/payment/list",
 		secType:  secTypeSigned,
 	}
+	if s.algo != "" {
+		r.setParam("algo", s.algo)
+	}
+	if s.userName != "" {
+		r.setParam("userName", s.userName)
+	}
+	if s.coin != nil {
+		r.setParam("coin", *s.coin)
+	}
+	if s.startDate != nil {
+		r.setParam("startDate", *s.startDate)
+	}
+
+	if s.endDate != nil {
+		r.setParam("endDate", *s.endDate)
+	}
+	if s.pageIndex != nil {
+		r.setParam("pageIndex", *s.pageIndex)
+	}
+
+	if s.pageSize != nil {
+		r.setParam("pageSize", *s.pageSize)
+	}
+	if s.recvWindow != nil {
+		r.setParam("recvWindow", *s.recvWindow)
+	}
+
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
 	}
+
+	log.Println("data", string(data))
 	res = new(MiningResponse)
 	err = json.Unmarshal(data, res)
 	if err != nil {

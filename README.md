@@ -27,7 +27,7 @@ Make sure you have read binance API document before continuing.
 ### Installation
 
 ```shell
-go get github.com/joker8023/go-binance/v2
+go get github.com/joker8023/go-binance
 ```
 
 For v1 API, it has been moved to `v1` branch, please use:
@@ -40,7 +40,7 @@ go get github.com/joker8023/go-binance/v1
 
 ```golang
 import (
-    "github.com/joker8023/go-binance/v2"
+    "github.com/joker8023/go-binance"
 )
 ```
 
@@ -322,7 +322,7 @@ Use the `binance.UseTestnet` flag before calling the client creation and the web
 
 ```go
 import (
-    "github.com/joker8023/go-binance/v2"
+    "github.com/joker8023/go-binance"
 )
 
 binance.UseTestnet = true
@@ -335,7 +335,7 @@ Use the `futures.UseTestnet` flag before calling the client creation and the web
 
 ```go
 import (
-    "github.com/joker8023/go-binance/v2/futures"
+    "github.com/joker8023/go-binance/futures"
 )
 
 futures.UseTestnet = true
@@ -348,7 +348,7 @@ Use the `delivery.UseTestnet` flag before calling the client creation and the we
 
 ```go
 import (
-    "github.com/joker8023/go-binance/v2/delivery"
+    "github.com/joker8023/go-binance/delivery"
 )
 
 delivery.UseTestnet = true

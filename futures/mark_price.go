@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/joker8023/go-binance/v2/common"
+	"github.com/joker8023/go-binance/common"
 )
 
 // PremiumIndexService get premium index

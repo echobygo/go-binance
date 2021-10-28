@@ -15,9 +15,9 @@ import (
 	"time"
 
 	"github.com/bitly/go-simplejson"
-	"github.com/joker8023/go-binance/v2/common"
-	"github.com/joker8023/go-binance/v2/delivery"
-	"github.com/joker8023/go-binance/v2/futures"
+	"github.com/joker8023/go-binance/common"
+	"github.com/joker8023/go-binance/delivery"
+	"github.com/joker8023/go-binance/futures"
 )
 
 // SideType define side type of order
@@ -661,4 +661,9 @@ func (c *Client) NewAssetDividendService() *AssetDividendService {
 // NewUserUniversalTransferService
 func (c *Client) NewUserUniversalTransferService() *CreateUserUniversalTransferService {
 	return &CreateUserUniversalTransferService{c: c}
+}
+
+// NewUserUniversalTransferService
+func (c *Client) NewGetMiningService() *GetMiningService {
+	return &GetMiningService{c: c}
 }

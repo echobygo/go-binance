@@ -1,4 +1,4 @@
-package delivery
+package futures
 
 import (
 	"bytes"
@@ -15,7 +15,7 @@ import (
 	"time"
 
 	"github.com/bitly/go-simplejson"
-	"github.com/joker8023/go-binance/v2/common"
+	"github.com/joker8023/go-binance/common"
 )
 
 // SideType define side type of order
@@ -57,15 +57,21 @@ type WorkingType string
 // MarginType define margin type
 type MarginType string
 
+// ContractType define contract type
+type ContractType string
+
 // UserDataEventType define user data event type
 type UserDataEventType string
 
 // UserDataEventReasonType define reason type for user data event
 type UserDataEventReasonType string
 
+// ForceOrderCloseType define reason type for force order
+type ForceOrderCloseType string
+
 // Endpoints
 const (
-	baseApiMainUrl    = "https://dapi.binance.com"
+	baseApiMainUrl    = "https://fapi.binance.com"
 	baseApiTestnetUrl = "https://testnet.binancefuture.com"
 )
 
@@ -93,7 +99,6 @@ const (
 
 	NewOrderRespTypeACK    NewOrderRespType = "ACK"
 	NewOrderRespTypeRESULT NewOrderRespType = "RESULT"
-	NewOrderRespTypeFULL   NewOrderRespType = "FULL"
 
 	OrderExecutionTypeNew         OrderExecutionType = "NEW"
 	OrderExecutionTypePartialFill OrderExecutionType = "PARTIAL_FILL"
@@ -109,6 +114,8 @@ const (
 	OrderStatusTypeCanceled        OrderStatusType = "CANCELED"
 	OrderStatusTypeRejected        OrderStatusType = "REJECTED"
 	OrderStatusTypeExpired         OrderStatusType = "EXPIRED"
+	OrderStatusTypeNewInsurance    OrderStatusType = "NEW_INSURANCE"
+	OrderStatusTypeNewADL          OrderStatusType = "NEW_ADL"
 
 	SymbolTypeFuture SymbolType = "FUTURE"
 
@@ -123,11 +130,13 @@ const (
 	SymbolStatusTypeAuctionMatch SymbolStatusType = "AUCTION_MATCH"
 	SymbolStatusTypeBreak        SymbolStatusType = "BREAK"
 
-	SymbolFilterTypeLotSize       SymbolFilterType = "LOT_SIZE"
-	SymbolFilterTypePrice         SymbolFilterType = "PRICE_FILTER"
-	SymbolFilterTypePercentPrice  SymbolFilterType = "PERCENT_PRICE"
-	SymbolFilterTypeMarketLotSize SymbolFilterType = "MARKET_LOT_SIZE"
-	SymbolFilterTypeMaxNumOrders  SymbolFilterType = "MAX_NUM_ORDERS"
+	SymbolFilterTypeLotSize          SymbolFilterType = "LOT_SIZE"
+	SymbolFilterTypePrice            SymbolFilterType = "PRICE_FILTER"
+	SymbolFilterTypePercentPrice     SymbolFilterType = "PERCENT_PRICE"
+	SymbolFilterTypeMarketLotSize    SymbolFilterType = "MARKET_LOT_SIZE"
+	SymbolFilterTypeMaxNumOrders     SymbolFilterType = "MAX_NUM_ORDERS"
+	SymbolFilterTypeMaxNumAlgoOrders SymbolFilterType = "MAX_NUM_ALGO_ORDERS"
+	SymbolFilterTypeMinNotional      SymbolFilterType = "MIN_NOTIONAL"
 
 	SideEffectTypeNoSideEffect SideEffectType = "NO_SIDE_EFFECT"
 	SideEffectTypeMarginBuy    SideEffectType = "MARGIN_BUY"
@@ -135,6 +144,8 @@ const (
 
 	MarginTypeIsolated MarginType = "ISOLATED"
 	MarginTypeCrossed  MarginType = "CROSSED"
+
+	ContractTypePerpetual ContractType = "PERPETUAL"
 
 	UserDataEventTypeListenKeyExpired    UserDataEventType = "listenKeyExpired"
 	UserDataEventTypeMarginCall          UserDataEventType = "MARGIN_CALL"
@@ -156,6 +167,9 @@ const (
 	UserDataEventReasonTypeAssetTransfer       UserDataEventReasonType = "ASSET_TRANSFER"
 	UserDataEventReasonTypeOptionsPremiumFee   UserDataEventReasonType = "OPTIONS_PREMIUM_FEE"
 	UserDataEventReasonTypeOptionsSettleProfit UserDataEventReasonType = "OPTIONS_SETTLE_PROFIT"
+
+	ForceOrderCloseTypeLiquidation ForceOrderCloseType = "LIQUIDATION"
+	ForceOrderCloseTypeADL         ForceOrderCloseType = "ADL"
 
 	timestampKey  = "timestamp"
 	signatureKey  = "signature"
@@ -337,6 +351,21 @@ func (c *Client) NewSetServerTimeService() *SetServerTimeService {
 	return &SetServerTimeService{c: c}
 }
 
+// NewDepthService init depth service
+func (c *Client) NewDepthService() *DepthService {
+	return &DepthService{c: c}
+}
+
+// NewAggTradesService init aggregate trades service
+func (c *Client) NewAggTradesService() *AggTradesService {
+	return &AggTradesService{c: c}
+}
+
+// NewRecentTradesService init recent trades service
+func (c *Client) NewRecentTradesService() *RecentTradesService {
+	return &RecentTradesService{c: c}
+}
+
 // NewKlinesService init klines service
 func (c *Client) NewKlinesService() *KlinesService {
 	return &KlinesService{c: c}
@@ -355,6 +384,81 @@ func (c *Client) NewListPricesService() *ListPricesService {
 // NewListBookTickersService init listing booking tickers service
 func (c *Client) NewListBookTickersService() *ListBookTickersService {
 	return &ListBookTickersService{c: c}
+}
+
+// NewCreateOrderService init creating order service
+func (c *Client) NewCreateOrderService() *CreateOrderService {
+	return &CreateOrderService{c: c}
+}
+
+// NewCreateBatchOrderService init creating batch order service
+func (c *Client) NewCreateBatchOrdersService() *CreateBatchOrdersService {
+	return &CreateBatchOrdersService{c: c}
+}
+
+// NewGetOrderService init get order service
+func (c *Client) NewGetOrderService() *GetOrderService {
+	return &GetOrderService{c: c}
+}
+
+// NewCancelOrderService init cancel order service
+func (c *Client) NewCancelOrderService() *CancelOrderService {
+	return &CancelOrderService{c: c}
+}
+
+// NewCancelAllOpenOrdersService init cancel all open orders service
+func (c *Client) NewCancelAllOpenOrdersService() *CancelAllOpenOrdersService {
+	return &CancelAllOpenOrdersService{c: c}
+}
+
+// NewCancelMultipleOrdersService init cancel multiple orders service
+func (c *Client) NewCancelMultipleOrdersService() *CancelMultiplesOrdersService {
+	return &CancelMultiplesOrdersService{c: c}
+}
+
+// NewListOpenOrdersService init list open orders service
+func (c *Client) NewListOpenOrdersService() *ListOpenOrdersService {
+	return &ListOpenOrdersService{c: c}
+}
+
+// NewListOrdersService init listing orders service
+func (c *Client) NewListOrdersService() *ListOrdersService {
+	return &ListOrdersService{c: c}
+}
+
+// NewGetAccountService init getting account service
+func (c *Client) NewGetAccountService() *GetAccountService {
+	return &GetAccountService{c: c}
+}
+
+// NewGetBalanceService init getting balance service
+func (c *Client) NewGetBalanceService() *GetBalanceService {
+	return &GetBalanceService{c: c}
+}
+
+// NewGetPositionRiskService init getting position risk service
+func (c *Client) NewGetPositionRiskService() *GetPositionRiskService {
+	return &GetPositionRiskService{c: c}
+}
+
+// NewGetPositionMarginHistoryService init getting position margin history service
+func (c *Client) NewGetPositionMarginHistoryService() *GetPositionMarginHistoryService {
+	return &GetPositionMarginHistoryService{c: c}
+}
+
+// NewGetIncomeHistoryService init getting income history service
+func (c *Client) NewGetIncomeHistoryService() *GetIncomeHistoryService {
+	return &GetIncomeHistoryService{c: c}
+}
+
+// NewHistoricalTradesService init listing trades service
+func (c *Client) NewHistoricalTradesService() *HistoricalTradesService {
+	return &HistoricalTradesService{c: c}
+}
+
+// NewListAccountTradeService init account trade list service
+func (c *Client) NewListAccountTradeService() *ListAccountTradeService {
+	return &ListAccountTradeService{c: c}
 }
 
 // NewStartUserStreamService init starting user stream service
@@ -377,34 +481,19 @@ func (c *Client) NewExchangeInfoService() *ExchangeInfoService {
 	return &ExchangeInfoService{c: c}
 }
 
-// NewCreateOrderService init creating order service
-func (c *Client) NewCreateOrderService() *CreateOrderService {
-	return &CreateOrderService{c: c}
+// NewPremiumIndexService init premium index service
+func (c *Client) NewPremiumIndexService() *PremiumIndexService {
+	return &PremiumIndexService{c: c}
 }
 
-// NewGetOrderService init get order service
-func (c *Client) NewGetOrderService() *GetOrderService {
-	return &GetOrderService{c: c}
+// NewFundingRateService init funding rate service
+func (c *Client) NewFundingRateService() *FundingRateService {
+	return &FundingRateService{c: c}
 }
 
-// NewCancelOrderService init cancel order service
-func (c *Client) NewCancelOrderService() *CancelOrderService {
-	return &CancelOrderService{c: c}
-}
-
-// NewCancelAllOpenOrdersService init cancel all open orders service
-func (c *Client) NewCancelAllOpenOrdersService() *CancelAllOpenOrdersService {
-	return &CancelAllOpenOrdersService{c: c}
-}
-
-// NewListOpenOrdersService init list open orders service
-func (c *Client) NewListOpenOrdersService() *ListOpenOrdersService {
-	return &ListOpenOrdersService{c: c}
-}
-
-// NewListOrdersService init listing orders service
-func (c *Client) NewListOrdersService() *ListOrdersService {
-	return &ListOrdersService{c: c}
+// NewListUserLiquidationOrdersService init list user's liquidation orders service
+func (c *Client) NewListUserLiquidationOrdersService() *ListUserLiquidationOrdersService {
+	return &ListUserLiquidationOrdersService{c: c}
 }
 
 // NewListLiquidationOrdersService init funding rate service
@@ -412,24 +501,14 @@ func (c *Client) NewListLiquidationOrdersService() *ListLiquidationOrdersService
 	return &ListLiquidationOrdersService{c: c}
 }
 
-// NewGetAccountService init account service
-func (c *Client) NewGetAccountService() *GetAccountService {
-	return &GetAccountService{c: c}
-}
-
-// NewGetBalanceService init balance service
-func (c *Client) NewGetBalanceService() *GetBalanceService {
-	return &GetBalanceService{c: c}
-}
-
-// NewGetPositionRiskService init getting position risk service
-func (c *Client) NewGetPositionRiskService() *GetPositionRiskService {
-	return &GetPositionRiskService{c: c}
-}
-
 // NewChangeLeverageService init change leverage service
 func (c *Client) NewChangeLeverageService() *ChangeLeverageService {
 	return &ChangeLeverageService{c: c}
+}
+
+// NewGetLeverageBracketService init change leverage service
+func (c *Client) NewGetLeverageBracketService() *GetLeverageBracketService {
+	return &GetLeverageBracketService{c: c}
 }
 
 // NewChangeMarginTypeService init change margin type service
@@ -450,4 +529,9 @@ func (c *Client) NewChangePositionModeService() *ChangePositionModeService {
 // NewGetPositionModeService init get position mode service
 func (c *Client) NewGetPositionModeService() *GetPositionModeService {
 	return &GetPositionModeService{c: c}
+}
+
+// NewGetRebateNewUserService init get rebate_newuser service
+func (c *Client) NewGetRebateNewUserService() *GetRebateNewUserService {
+	return &GetRebateNewUserService{c: c}
 }

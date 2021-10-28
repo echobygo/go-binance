@@ -1,10 +1,10 @@
-package binance
+package futures
 
 import (
 	"context"
 	"net/http"
 
-	"github.com/joker8023/go-binance/v2/common"
+	"github.com/joker8023/go-binance/common"
 )
 
 // DepthService show depth info
@@ -30,7 +30,7 @@ func (s *DepthService) Limit(limit int) *DepthService {
 func (s *DepthService) Do(ctx context.Context, opts ...RequestOption) (res *DepthResponse, err error) {
 	r := &request{
 		method:   http.MethodGet,
-		endpoint: "/api/v3/depth",
+		endpoint: "/fapi/v1/depth",
 	}
 	r.setParam("symbol", s.symbol)
 	if s.limit != nil {
@@ -45,6 +45,8 @@ func (s *DepthService) Do(ctx context.Context, opts ...RequestOption) (res *Dept
 		return nil, err
 	}
 	res = new(DepthResponse)
+	res.Time = j.Get("E").MustInt64()
+	res.TradeTime = j.Get("T").MustInt64()
 	res.LastUpdateID = j.Get("lastUpdateId").MustInt64()
 	bidsLen := len(j.Get("bids").MustArray())
 	res.Bids = make([]Bid, bidsLen)
@@ -70,6 +72,8 @@ func (s *DepthService) Do(ctx context.Context, opts ...RequestOption) (res *Dept
 // DepthResponse define depth info with bids and asks
 type DepthResponse struct {
 	LastUpdateID int64 `json:"lastUpdateId"`
+	Time         int64 `json:"E"`
+	TradeTime    int64 `json:"T"`
 	Bids         []Bid `json:"bids"`
 	Asks         []Ask `json:"asks"`
 }

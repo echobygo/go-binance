@@ -1,11 +1,11 @@
-package futures
+package delivery
 
 import (
 	"fmt"
 	"net/http"
 	"testing"
 
-	"github.com/joker8023/go-binance/v2/common"
+	"github.com/joker8023/go-binance/common"
 	"github.com/stretchr/testify/suite"
 )
 
