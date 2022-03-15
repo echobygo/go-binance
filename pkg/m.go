@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	binance "github.com/joker8023/go-binance"
+	binance "github.com/echobygo/go-binance"
 )
 
 var (
