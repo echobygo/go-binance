@@ -262,8 +262,8 @@ func (s *ListAccountTradeService) Do(ctx context.Context, opts ...RequestOption)
 	if s.endTime != nil {
 		r.setParam("endTime", *s.endTime)
 	}
-	if s.fromID != nil {
-		r.setParam("fromID", *s.fromID)
+	if s.fromID != nil|| *s.fromID!=0 {
+		r.setParam("fromId", *s.fromID)
 	}
 	if s.limit != nil {
 		r.setParam("limit", *s.limit)

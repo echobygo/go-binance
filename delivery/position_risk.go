@@ -64,4 +64,5 @@ type PositionRisk struct {
 	IsolatedMargin   string `json:"isolatedMargin"`
 	IsAutoAddMargin  string `json:"isAutoAddMargin"`
 	PositionSide     string `json:"positionSide"`
+	UpdateTime   	int64 `json:"updateTime"`
 }

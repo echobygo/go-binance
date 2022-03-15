@@ -416,7 +416,10 @@ func (c *Client) NewListLiquidationOrdersService() *ListLiquidationOrdersService
 func (c *Client) NewGetAccountService() *GetAccountService {
 	return &GetAccountService{c: c}
 }
-
+// NewListAccountTradeService init get order service
+func (c *Client) NewListAccountTradeService() *ListAccountTradeService {
+	return &ListAccountTradeService{c: c}
+}
 // NewGetBalanceService init balance service
 func (c *Client) NewGetBalanceService() *GetBalanceService {
 	return &GetBalanceService{c: c}

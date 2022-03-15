@@ -3,6 +3,7 @@ package futures
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -72,6 +73,8 @@ func (s *GetIncomeHistoryService) Do(ctx context.Context, opts ...RequestOption)
 		return nil, err
 	}
 	res = make([]*IncomeHistory, 0)
+
+	fmt.Println(string(data))
 	err = json.Unmarshal(data, &res)
 	if err != nil {
 		return nil, err

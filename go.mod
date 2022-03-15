@@ -1,4 +1,4 @@
-module github.com/joker8023/go-binance
+module github.com/echobygo/go-binance
 
 go 1.17
 

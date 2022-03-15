@@ -10,6 +10,7 @@ import (
 type GetPositionRiskService struct {
 	c      *Client
 	symbol string
+	marginType string
 }
 
 // Symbol set symbol
@@ -17,7 +18,10 @@ func (s *GetPositionRiskService) Symbol(symbol string) *GetPositionRiskService {
 	s.symbol = symbol
 	return s
 }
-
+func (s *GetPositionRiskService) MarginType(marginType string) *GetPositionRiskService {
+	s.marginType = marginType
+	return s
+}
 // Do send request
 func (s *GetPositionRiskService) Do(ctx context.Context, opts ...RequestOption) (res []*PositionRisk, err error) {
 	r := &request{
@@ -27,6 +31,9 @@ func (s *GetPositionRiskService) Do(ctx context.Context, opts ...RequestOption) 
 	}
 	if s.symbol != "" {
 		r.setParam("symbol", s.symbol)
+	}
+	if s.marginType != "" {
+		r.setParam("marginType", s.marginType)
 	}
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
@@ -56,4 +63,5 @@ type PositionRisk struct {
 	PositionSide     string `json:"positionSide"`
 	Notional         string `json:"notional"`
 	IsolatedWallet   string `json:"isolatedWallet"`
+	UpdateTime      int64 `json:"updateTime"`
 }
